@@ -31,6 +31,9 @@
             gridSimbolos = new DataGridView();
             openFileDialog1 = new OpenFileDialog();
             saveFileDialog1 = new SaveFileDialog();
+            Agregar = new DataGridViewTextBoxColumn();
+            ObtenerTipo = new DataGridViewTextBoxColumn();
+            Existe = new DataGridViewTextBoxColumn();
             toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitMain).BeginInit();
             splitMain.Panel1.SuspendLayout();
@@ -189,6 +192,7 @@
             gridSimbolos.AllowUserToAddRows = false;
             gridSimbolos.AllowUserToDeleteRows = false;
             gridSimbolos.ColumnHeadersHeight = 29;
+            gridSimbolos.Columns.AddRange(new DataGridViewColumn[] { Agregar, ObtenerTipo, Existe });
             gridSimbolos.Dock = DockStyle.Fill;
             gridSimbolos.Location = new Point(0, 0);
             gridSimbolos.Name = "gridSimbolos";
@@ -202,6 +206,30 @@
             // openFileDialog1
             // 
             openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // Agregar
+            // 
+            Agregar.HeaderText = "Nombre";
+            Agregar.MinimumWidth = 8;
+            Agregar.Name = "Agregar";
+            Agregar.ReadOnly = true;
+            Agregar.Width = 150;
+            // 
+            // ObtenerTipo
+            // 
+            ObtenerTipo.HeaderText = "Tipo";
+            ObtenerTipo.MinimumWidth = 8;
+            ObtenerTipo.Name = "ObtenerTipo";
+            ObtenerTipo.ReadOnly = true;
+            ObtenerTipo.Width = 150;
+            // 
+            // Existe
+            // 
+            Existe.HeaderText = "Línea";
+            Existe.MinimumWidth = 8;
+            Existe.Name = "Existe";
+            Existe.ReadOnly = true;
+            Existe.Width = 150;
             // 
             // FrmCompilador
             // 
@@ -232,7 +260,7 @@
             PerformLayout();
         }
 
-        #endregion
+        #endregion/
 
         private ToolStrip toolStrip1;
         private ToolStripButton btnNuevo;
@@ -251,5 +279,8 @@
         private DataGridView gridSimbolos;
         private OpenFileDialog openFileDialog1;
         private SaveFileDialog saveFileDialog1;
+        private DataGridViewTextBoxColumn Agregar;
+        private DataGridViewTextBoxColumn ObtenerTipo;
+        private DataGridViewTextBoxColumn Existe;
     }
 }

@@ -26,6 +26,7 @@ namespace Compilador.UI.Forms
         {
             InitializeComponent();
             InicializarEditor();
+            InicializarGrid();
             AplicarTemaClaro();
             gridSimbolos.Rows.Clear();
 
@@ -37,11 +38,9 @@ namespace Compilador.UI.Forms
         private void InicializarGrid()
         {
             gridSimbolos.Columns.Clear();
-
-            gridSimbolos.Columns.Add("Linea", "Linea");
+            gridSimbolos.Columns.Add("Nombre", "Nombre");
             gridSimbolos.Columns.Add("Tipo", "Tipo");
-            gridSimbolos.Columns.Add("Lexema", "Lexema");
-
+            gridSimbolos.Columns.Add("Linea", "Línea");
             gridSimbolos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
@@ -258,14 +257,27 @@ namespace Compilador.UI.Forms
                     txtTokens.AppendText(Environment.NewLine);
                 }
 
-                // 8. Fase Sintáctica (Fuera del bucle de tokens)
-                txtEstatus.AppendText("Fase 2 [Sintáctico] INICIADO" + Environment.NewLine);
+                // 8. Fase Sintáctica y Semántica
+                txtEstatus.AppendText("Fase 2 [Sintáctico/Semántico] INICIADO" + Environment.NewLine);
                 var analizadorSintactico = new AnalizadorSintactico();
                 analizadorSintactico.Parse(resultado.Tokens);
                 
+                // Mostrar tabla de símbolos
+                gridSimbolos.Rows.Clear();
+                Console.WriteLine("\n--- TABLA DE SÍMBOLOS ---");
+                Console.WriteLine("{0,-20} {1,-10} {2,-5}", "Nombre", "Tipo", "Línea");
+                Console.WriteLine("------------------------------------------");
+                
+                foreach (var sim in analizadorSintactico.TablaSimbolos.ObtenerSimbolos())
+                {
+                    gridSimbolos.Rows.Add(sim.Key, sim.Value.Tipo, sim.Value.Linea);
+                    Console.WriteLine("{0,-20} {1,-10} {2,-5}", sim.Key, sim.Value.Tipo, sim.Value.Linea);
+                }
+                Console.WriteLine("------------------------------------------\n");
+
                 if (analizadorSintactico.Errores.Count == 0)
                 {
-                    txtEstatus.AppendText("Análisis Sintáctico finalizado con éxito" + Environment.NewLine);
+                    txtEstatus.AppendText("Análisis finalizado con éxito" + Environment.NewLine);
                 }
                 else
                 {

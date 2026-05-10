@@ -14,6 +14,8 @@ namespace Compilador
         public List<string> Errores = new List<string>();
         private TablaSimbolos _tablaSimbolos = new TablaSimbolos();
 
+        public TablaSimbolos TablaSimbolos => _tablaSimbolos;
+
         // Constantes para tokens
         private const int TKN_ID = 101;
         private const int TKN_PROGRAM = 102;
@@ -116,13 +118,14 @@ namespace Compilador
 
                 MatchLexema(":", "Falta ':' en la declaración de variable");
                 string tipo = _tokenActual.Lexema; 
+                int lineaDeclaracion = _tokenActual.Linea;
                 ParserTipo();
                 
                 foreach (var n in nombres)
                 {
-                    if (!_tablaSimbolos.Agregar(n, tipo))
+                    if (!_tablaSimbolos.Agregar(n, tipo, lineaDeclaracion))
                     {
-                        Errores.Add($"Error Semántico en línea {_tokens[_posicionActual-1].Linea}: La variable '{n}' ya ha sido declarada.");
+                        Errores.Add($"Error Semántico en línea {lineaDeclaracion}: La variable '{n}' ya ha sido declarada.");
                     }
                 }
 
@@ -153,11 +156,12 @@ namespace Compilador
                 if (_tokenActual.Tipo == TKN_ID)
                 {
                     string nombreParam = _tokenActual.Lexema;
+                    int lineaParam = _tokenActual.Linea;
                     MatchTipo(TKN_ID, "Identificador de parámetro");
                     MatchLexema(":", "Falta ':'");
                     string tipoParam = _tokenActual.Lexema;
                     ParserTipo();
-                    _tablaSimbolos.Agregar(nombreParam, tipoParam);
+                    _tablaSimbolos.Agregar(nombreParam, tipoParam, lineaParam);
                 }
                 MatchLexema(")", "Falta ')'");
             }
