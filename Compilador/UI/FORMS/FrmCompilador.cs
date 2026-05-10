@@ -1,4 +1,4 @@
-﻿
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -220,7 +220,7 @@ namespace Compilador.UI.Forms
                 txtEstatus.Clear();
 
                 // 2. Mostrar mensaje inicial
-                txtEstatus.Text = "Ha iniciado el léxico." + Environment.NewLine;
+                txtEstatus.Text = "Fase 1 [Léxico] INICIADO." + Environment.NewLine;
 
                 // 3. Obtener texto del editor
                 string textoFuente = txtEditor.Text;
@@ -243,8 +243,7 @@ namespace Compilador.UI.Forms
                     txtEstatus.AppendText(aviso + Environment.NewLine);
                 }
 
-                // 7 Mostrar tokens en linea
-
+                // 7. Mostrar tokens agrupados por línea
                 var tokensAgrupados = resultado.Tokens
                     .GroupBy(t => t.Linea)
                     .OrderBy(g => g.Key);
@@ -252,18 +251,36 @@ namespace Compilador.UI.Forms
                 foreach (var grupo in tokensAgrupados)
                 {
                     txtTokens.AppendText($"[Linea {grupo.Key}]  ");
-
                     foreach (var token in grupo)
                     {
                         txtTokens.AppendText($"[{token.Tipo}: {token.Lexema}] ");
-
-                        
                     }
-
                     txtTokens.AppendText(Environment.NewLine);
+                }
 
+                // 8. Fase Sintáctica (Fuera del bucle de tokens)
+                txtEstatus.AppendText("Fase 2 [Sintáctico] INICIADO" + Environment.NewLine);
+                var analizadorSintactico = new AnalizadorSintactico();
+                analizadorSintactico.Parse(resultado.Tokens);
+                
+                if (analizadorSintactico.Errores.Count == 0)
+                {
+                    txtEstatus.AppendText("Análisis Sintáctico finalizado con éxito" + Environment.NewLine);
+                }
+                else
+                {
+                    foreach (var error in analizadorSintactico.Errores)
+                    {
+                        txtEstatus.AppendText(error + Environment.NewLine);
+                    }
                 }
             }
+
+
+
+
+
+
             catch (Exception ex)
             {
                 MessageBox.Show("Error al compilar: " + ex.Message,
